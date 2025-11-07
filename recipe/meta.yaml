@@ -1,4 +1,4 @@
-{% set version = "2.0.6" %}
+{% set version = "2.95.8" %}
 
 package:
   name: iceoryx-split
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/eclipse-iceoryx/iceoryx/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: a2add8ffee0c3357ef985cc46c7de79ccb754ea2bed02c61f2ff805ab2c869f1
+  sha256: 00b1bf874e17b3e986f11cd134e2be339f3d12643b58b4544692cc4e820439ff
   patches:
     - patches/fix_channel.diff
     - patches/missing_cstdint.diff
