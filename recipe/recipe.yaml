@@ -1,0 +1,199 @@
+schema_version: 1
+
+context:
+  version: 2.0.6
+
+recipe:
+  name: iceoryx-split
+  version: ${{ version }}
+
+source:
+  url: https://github.com/eclipse-iceoryx/iceoryx/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: a2add8ffee0c3357ef985cc46c7de79ccb754ea2bed02c61f2ff805ab2c869f1
+  patches:
+    - patches/fix_channel.diff
+    - patches/missing_cstdint.diff
+    - patches/sha1_cannot_be_empty.diff
+
+build:
+  number: 1
+  skip: win
+
+requirements:
+  build:
+    - ${{ compiler('cxx') }}
+    - ${{ stdlib('c') }}
+    - cmake
+    - make
+  host:
+    - if: linux
+      then: libacl
+    - ncurses
+
+outputs:
+  - package:
+      name: libiceoryx-hoofs
+    files:
+      include:
+        - lib/libiceoryx_hoofs*
+        - lib/libiceoryx_platform*
+    requirements:
+      build:
+        - ${{ compiler('cxx') }}
+        - ${{ stdlib('c') }}
+        - cmake
+        - make
+      host:
+        - if: linux
+          then: libacl
+        - ncurses
+    tests:
+      - script:
+          - test -f ${PREFIX}/lib/libiceoryx_hoofs${SHLIB_EXT}
+  - package:
+      name: libiceoryx-posh
+    files:
+      include:
+        - lib/libiceoryx_posh*
+    requirements:
+      build:
+        - ${{ compiler('cxx') }}
+        - ${{ stdlib('c') }}
+        - cmake
+        - make
+      host:
+        - if: linux
+          then: libacl
+        - ncurses
+        - ${{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+      run:
+        - ${{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+    tests:
+      - script:
+          - test -f ${PREFIX}/lib/libiceoryx_posh${SHLIB_EXT}
+  - package:
+      name: libiceoryx-binding-c
+    files:
+      include:
+        - lib/libiceoryx_binding_c*
+    requirements:
+      build:
+        - ${{ compiler('cxx') }}
+        - ${{ stdlib('c') }}
+        - cmake
+        - make
+      host:
+        - if: linux
+          then: libacl
+        - ncurses
+        - ${{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-posh", exact=True) }}
+      run:
+        - ${{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-posh", exact=True) }}
+    tests:
+      - script:
+          - test -f ${PREFIX}/lib/libiceoryx_binding_c${SHLIB_EXT}
+  - package:
+      name: libiceoryx-hoofs-devel
+    files:
+      include:
+        - include/iceoryx/v${{ version }}/iceoryx_versions.hpp
+        - include/iceoryx/v${{ version }}/iceoryx_hoofs
+        - lib/cmake/iceoryx_hoofs
+    build:
+    requirements:
+      run:
+        - ${{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+      run_exports:
+        - ${{ pin_subpackage("libiceoryx-hoofs", upper_bound="x.x.x") }}
+    tests:
+      - script:
+          - test -f ${PREFIX}/include/iceoryx/v${{ version }}/iceoryx_versions.hpp
+          - test -f ${PREFIX}/include/iceoryx/v${{ version }}/iceoryx_hoofs/platform/inet.hpp
+  - package:
+      name: libiceoryx-posh-devel
+    files:
+      include:
+        - include/iceoryx/v${{ version }}/iceoryx_posh
+        - lib/cmake/iceoryx_posh
+    build:
+    requirements:
+      run:
+        - ${{ pin_subpackage("libiceoryx-hoofs-devel", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-posh", exact=True) }}
+      run_exports:
+        - ${{ pin_subpackage("libiceoryx-posh", upper_bound="x.x.x") }}
+        - ${{ pin_subpackage("libiceoryx-hoofs", upper_bound="x.x.x") }}
+    tests:
+      - script:
+          - test -f ${PREFIX}/include/iceoryx/v${{ version }}/iceoryx_posh/version/version_info.hpp
+  - package:
+      name: libiceoryx-binding-c-devel
+    files:
+      include:
+        - include/iceoryx/v${{ version }}/iceoryx_binding_c
+        - lib/cmake/iceoryx_binding
+    build:
+    requirements:
+      run:
+        - ${{ pin_subpackage("libiceoryx-hoofs-devel", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-posh-devel", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-binding-c", exact=True) }}
+      run_exports:
+        - ${{ pin_subpackage("libiceoryx-binding-c", upper_bound="x.x.x") }}
+    tests:
+      - script:
+          - test -f ${PREFIX}/include/iceoryx/v${{ version }}/iceoryx_posh/version/version_info.hpp
+  - package:
+      name: iceoryx
+    files:
+      include:
+        - share/doc
+        - bin/iox-roudi
+        - etc/roudi_config_example.toml
+    requirements:
+      build:
+        - ${{ compiler('cxx') }}
+        - ${{ stdlib('c') }}
+        - cmake
+        - make
+      host:
+        - if: linux
+          then: libacl
+        - ncurses
+        - ${{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-posh", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-binding-c", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-hoofs-devel", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-posh-devel", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-binding-c-devel", exact=True) }}
+      run:
+        - ${{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-posh", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-binding-c", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-hoofs-devel", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-posh-devel", exact=True) }}
+        - ${{ pin_subpackage("libiceoryx-binding-c-devel", exact=True) }}
+    tests:
+      - script:
+          - iox-roudi -h
+
+about:
+  summary: Eclipse iceoryx - true zero-copy inter-process-communication
+  description: |
+    Eclipse iceoryx is an inter-process-communication middleware that enables
+    virtually limitless data transmissions at constant time.
+  license: Apache-2.0 AND MIT AND EPL-2.0
+  license_file:
+    - LICENSE
+    - iceoryx_posh/doc/3rd_party_licenses/cpptoml/LICENSE
+    - doc/3rd_party_licenses/cyclonedds/LICENSE
+  homepage: https://iceoryx.io/
+  repository: https://github.com/eclipse-iceoryx/iceoryx
+  documentation: https://iceoryx.io/latest/
+
+extra:
+  feedstock-name: iceoryx
+  recipe-maintainers:
+    - timkpaine
