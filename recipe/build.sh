@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export CMAKE_POLICY_VERSION_MINIMUM=4.0
+export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 
 mkdir build
 cd build
