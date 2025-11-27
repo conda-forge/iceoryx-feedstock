@@ -78,6 +78,7 @@ outputs:
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
         - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
       run:
+        - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
         - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
     test:
       commands:
