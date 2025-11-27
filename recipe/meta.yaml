@@ -76,8 +76,9 @@ outputs:
         - libacl    # [linux]
         - ncurses
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
       run:
-        - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
     test:
       commands:
         - test -f ${PREFIX}/lib/libiceoryx_posh${SHLIB_EXT}
