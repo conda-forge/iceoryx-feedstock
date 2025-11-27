@@ -1,5 +1,5 @@
---- ./iceoryx_posh/cmake/iceoryxversions.cmake	2025-11-05 12:48:15.570087058 -0800
-+++ ./iceoryx_posh/cmake/iceoryxversions.cmake	2025-11-05 12:48:37.545210004 -0800
+--- ./iceoryx_platform/cmake/iceoryxversions.cmake	2025-11-05 12:48:15.570087058 -0800
++++ ./iceoryx_platform/cmake/iceoryxversions.cmake	2025-11-05 12:48:37.545210004 -0800
 @@ -15,11 +15,7 @@
  # SPDX-License-Identifier: Apache-2.0
  
