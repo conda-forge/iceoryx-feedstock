@@ -25,10 +25,9 @@ requirements:
     - ncurses
 
 outputs:
-  - name: libiceoryx-hoofs
+  - name: libiceoryx-platform
     files:
       include:
-        - lib/libiceoryx_hoofs*
         - lib/libiceoryx_platform*
     requirements:
       build:
@@ -39,6 +38,26 @@ outputs:
       host:
         - libacl    # [linux]
         - ncurses
+    test:
+      commands:
+        - test -f ${PREFIX}/lib/libiceoryx_platform${SHLIB_EXT}
+
+  - name: libiceoryx-hoofs
+    files:
+      include:
+        - lib/libiceoryx_hoofs*
+    requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - {{ stdlib('c') }}
+        - cmake
+        - make
+      host:
+        - libacl    # [linux]
+        - ncurses
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
+      run:
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
     test:
       commands:
         - test -f ${PREFIX}/lib/libiceoryx_hoofs${SHLIB_EXT}
@@ -85,22 +104,39 @@ outputs:
       commands:
         - test -f ${PREFIX}/lib/libiceoryx_binding_c${SHLIB_EXT}
 
+  - name: libiceoryx-platform-devel
+    build:
+      run_exports:
+        - {{ pin_subpackage("libiceoryx-platform", max_pin="x.x.x") }}
+    files:
+      include:
+        - include/iceoryx/v{{ version }}/iceoryx_versions.hpp
+        - include/iceoryx/v{{ version }}/iox
+        - include/iceoryx/v{{ version }}/iceoryx_platform
+        - lib/cmake/iceoryx_platform
+    requirements:
+      run:
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
+    test:
+      commands:
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_platform/inet.hpp
+
   - name: libiceoryx-hoofs-devel
     build:
       run_exports:
         - {{ pin_subpackage("libiceoryx-hoofs", max_pin="x.x.x") }}
     files:
       include:
-        - include/iceoryx/v{{ version }}/iceoryx_versions.hpp
         - include/iceoryx/v{{ version }}/iceoryx_hoofs
         - lib/cmake/iceoryx_hoofs
     requirements:
       run:
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - {{ pin_subpackage("libiceoryx-platform-devel", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.hpp
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_hoofs/platform/inet.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_hoofs/iceoryx_hoofs_types.hpp
 
   - name: libiceoryx-posh-devel
     build:
