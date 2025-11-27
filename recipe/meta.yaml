@@ -178,7 +178,6 @@ about:
   license_file:
     - LICENSE
     - iceoryx_posh/doc/3rd_party_licenses/cpptoml/LICENSE
-    - doc/3rd_party_licenses/cyclonedds/LICENSE
   doc_url: https://iceoryx.io/latest/
   dev_url: https://github.com/eclipse-iceoryx/iceoryx
 
