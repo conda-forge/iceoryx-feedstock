@@ -1,4 +1,4 @@
-{% set version = "2.0.6" %}
+{% set version = "2.95.8" %}
 
 package:
   name: iceoryx-split
@@ -6,10 +6,8 @@ package:
 
 source:
   url: https://github.com/eclipse-iceoryx/iceoryx/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: a2add8ffee0c3357ef985cc46c7de79ccb754ea2bed02c61f2ff805ab2c869f1
+  sha256: 00b1bf874e17b3e986f11cd134e2be339f3d12643b58b4544692cc4e820439ff
   patches:
-    - patches/fix_channel.diff
-    - patches/missing_cstdint.diff
     - patches/sha1_cannot_be_empty.diff
 
 build:
@@ -27,10 +25,9 @@ requirements:
     - ncurses
 
 outputs:
-  - name: libiceoryx-hoofs
+  - name: libiceoryx-platform
     files:
       include:
-        - lib/libiceoryx_hoofs*
         - lib/libiceoryx_platform*
     requirements:
       build:
@@ -41,6 +38,26 @@ outputs:
       host:
         - libacl    # [linux]
         - ncurses
+    test:
+      commands:
+        - test -f ${PREFIX}/lib/libiceoryx_platform${SHLIB_EXT}
+
+  - name: libiceoryx-hoofs
+    files:
+      include:
+        - lib/libiceoryx_hoofs*
+    requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - {{ stdlib('c') }}
+        - cmake
+        - make
+      host:
+        - libacl    # [linux]
+        - ncurses
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
+      run:
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
     test:
       commands:
         - test -f ${PREFIX}/lib/libiceoryx_hoofs${SHLIB_EXT}
@@ -59,8 +76,10 @@ outputs:
         - libacl    # [linux]
         - ncurses
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
       run:
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
     test:
       commands:
         - test -f ${PREFIX}/lib/libiceoryx_posh${SHLIB_EXT}
@@ -87,22 +106,39 @@ outputs:
       commands:
         - test -f ${PREFIX}/lib/libiceoryx_binding_c${SHLIB_EXT}
 
+  - name: libiceoryx-platform-devel
+    build:
+      run_exports:
+        - {{ pin_subpackage("libiceoryx-platform", max_pin="x.x.x") }}
+    files:
+      include:
+        - include/iceoryx/v{{ version }}/iceoryx_versions.hpp
+        - include/iceoryx/v{{ version }}/iox
+        - include/iceoryx/v{{ version }}/iceoryx_platform
+        - lib/cmake/iceoryx_platform
+    requirements:
+      run:
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
+    test:
+      commands:
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_platform/inet.hpp
+
   - name: libiceoryx-hoofs-devel
     build:
       run_exports:
         - {{ pin_subpackage("libiceoryx-hoofs", max_pin="x.x.x") }}
     files:
       include:
-        - include/iceoryx/v{{ version }}/iceoryx_versions.hpp
         - include/iceoryx/v{{ version }}/iceoryx_hoofs
         - lib/cmake/iceoryx_hoofs
     requirements:
       run:
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
+        - {{ pin_subpackage("libiceoryx-platform-devel", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.hpp
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_hoofs/platform/inet.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_hoofs/iceoryx_hoofs_types.hpp
 
   - name: libiceoryx-posh-devel
     build:
@@ -180,7 +216,6 @@ about:
   license_file:
     - LICENSE
     - iceoryx_posh/doc/3rd_party_licenses/cpptoml/LICENSE
-    - doc/3rd_party_licenses/cyclonedds/LICENSE
   doc_url: https://iceoryx.io/latest/
   dev_url: https://github.com/eclipse-iceoryx/iceoryx
 
