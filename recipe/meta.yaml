@@ -11,7 +11,7 @@ source:
     - patches/sha1_cannot_be_empty.diff
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
 
 requirements:
@@ -113,6 +113,7 @@ outputs:
     files:
       include:
         - include/iceoryx/v{{ version }}/iceoryx_versions.hpp
+        - include/iceoryx/v{{ version }}/iceoryx_versions.h
         - include/iceoryx/v{{ version }}/iox
         - include/iceoryx/v{{ version }}/iceoryx_platform
         - lib/cmake/iceoryx_platform
@@ -122,6 +123,7 @@ outputs:
     test:
       commands:
         - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.h
         - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_platform/inet.hpp
 
   - name: libiceoryx-hoofs-devel
