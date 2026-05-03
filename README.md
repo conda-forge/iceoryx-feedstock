@@ -48,6 +48,13 @@ Current build status
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/iceoryx-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_" alt="variant">
                 </a>
               </td>
+            </tr><tr>
+              <td>win_64</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=26799&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/iceoryx-feedstock?branchName=main&jobName=win&configuration=win%20win_64_" alt="variant">
+                </a>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -66,6 +73,8 @@ Current release info
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libiceoryx--binding--c--devel-green.svg)](https://anaconda.org/conda-forge/libiceoryx-binding-c-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libiceoryx-binding-c-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-binding-c-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libiceoryx-binding-c-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-binding-c-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libiceoryx-binding-c-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-binding-c-devel) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libiceoryx--hoofs-green.svg)](https://anaconda.org/conda-forge/libiceoryx-hoofs) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libiceoryx-hoofs.svg)](https://anaconda.org/conda-forge/libiceoryx-hoofs) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libiceoryx-hoofs.svg)](https://anaconda.org/conda-forge/libiceoryx-hoofs) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libiceoryx-hoofs.svg)](https://anaconda.org/conda-forge/libiceoryx-hoofs) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libiceoryx--hoofs--devel-green.svg)](https://anaconda.org/conda-forge/libiceoryx-hoofs-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libiceoryx-hoofs-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-hoofs-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libiceoryx-hoofs-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-hoofs-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libiceoryx-hoofs-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-hoofs-devel) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-libiceoryx--platform-green.svg)](https://anaconda.org/conda-forge/libiceoryx-platform) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libiceoryx-platform.svg)](https://anaconda.org/conda-forge/libiceoryx-platform) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libiceoryx-platform.svg)](https://anaconda.org/conda-forge/libiceoryx-platform) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libiceoryx-platform.svg)](https://anaconda.org/conda-forge/libiceoryx-platform) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-libiceoryx--platform--devel-green.svg)](https://anaconda.org/conda-forge/libiceoryx-platform-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libiceoryx-platform-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-platform-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libiceoryx-platform-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-platform-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libiceoryx-platform-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-platform-devel) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libiceoryx--posh-green.svg)](https://anaconda.org/conda-forge/libiceoryx-posh) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libiceoryx-posh.svg)](https://anaconda.org/conda-forge/libiceoryx-posh) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libiceoryx-posh.svg)](https://anaconda.org/conda-forge/libiceoryx-posh) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libiceoryx-posh.svg)](https://anaconda.org/conda-forge/libiceoryx-posh) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libiceoryx--posh--devel-green.svg)](https://anaconda.org/conda-forge/libiceoryx-posh-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libiceoryx-posh-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-posh-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libiceoryx-posh-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-posh-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libiceoryx-posh-devel.svg)](https://anaconda.org/conda-forge/libiceoryx-posh-devel) |
 
@@ -79,16 +88,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `iceoryx, libiceoryx-binding-c, libiceoryx-binding-c-devel, libiceoryx-hoofs, libiceoryx-hoofs-devel, libiceoryx-posh, libiceoryx-posh-devel` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `iceoryx, libiceoryx-binding-c, libiceoryx-binding-c-devel, libiceoryx-hoofs, libiceoryx-hoofs-devel, libiceoryx-platform, libiceoryx-platform-devel, libiceoryx-posh, libiceoryx-posh-devel` can be installed with `conda`:
 
 ```
-conda install iceoryx libiceoryx-binding-c libiceoryx-binding-c-devel libiceoryx-hoofs libiceoryx-hoofs-devel libiceoryx-posh libiceoryx-posh-devel
+conda install iceoryx libiceoryx-binding-c libiceoryx-binding-c-devel libiceoryx-hoofs libiceoryx-hoofs-devel libiceoryx-platform libiceoryx-platform-devel libiceoryx-posh libiceoryx-posh-devel
 ```
 
 or with `mamba`:
 
 ```
-mamba install iceoryx libiceoryx-binding-c libiceoryx-binding-c-devel libiceoryx-hoofs libiceoryx-hoofs-devel libiceoryx-posh libiceoryx-posh-devel
+mamba install iceoryx libiceoryx-binding-c libiceoryx-binding-c-devel libiceoryx-hoofs libiceoryx-hoofs-devel libiceoryx-platform libiceoryx-platform-devel libiceoryx-posh libiceoryx-posh-devel
 ```
 
 It is possible to list all of the versions of `iceoryx` available on your platform with `conda`:

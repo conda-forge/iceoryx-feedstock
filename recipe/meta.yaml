@@ -12,69 +12,77 @@ source:
 
 build:
   number: 1
-  skip: true  # [win]
 
 requirements:
   build:
     - {{ compiler('cxx') }}
     - {{ stdlib('c') }}
     - cmake
-    - make
+    - make  # [unix]
+    - ninja  # [win]
   host:
     - libacl    # [linux]
-    - ncurses
+    - ncurses  # [unix]
 
 outputs:
   - name: libiceoryx-platform
     files:
       include:
-        - lib/libiceoryx_platform*
+        - lib/libiceoryx_platform*  # [unix]
+        - Library/bin/iceoryx_platform*.dll  # [win]
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - cmake
-        - make
+        - make  # [unix]
+        - ninja  # [win]
       host:
         - libacl    # [linux]
-        - ncurses
+        - ncurses  # [unix]
     test:
       commands:
-        - test -f ${PREFIX}/lib/libiceoryx_platform${SHLIB_EXT}
+        - test -f ${PREFIX}/lib/libiceoryx_platform${SHLIB_EXT}  # [unix]
+        - if not exist "%LIBRARY_BIN%\iceoryx_platform.dll" exit 1  # [win]
 
   - name: libiceoryx-hoofs
     files:
       include:
-        - lib/libiceoryx_hoofs*
+        - lib/libiceoryx_hoofs*  # [unix]
+        - Library/bin/iceoryx_hoofs*.dll  # [win]
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - cmake
-        - make
+        - make  # [unix]
+        - ninja  # [win]
       host:
         - libacl    # [linux]
-        - ncurses
+        - ncurses  # [unix]
         - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
       run:
         - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/lib/libiceoryx_hoofs${SHLIB_EXT}
+        - test -f ${PREFIX}/lib/libiceoryx_hoofs${SHLIB_EXT}  # [unix]
+        - if not exist "%LIBRARY_BIN%\iceoryx_hoofs.dll" exit 1  # [win]
 
   - name: libiceoryx-posh
     files:
       include:
-        - lib/libiceoryx_posh*
+        - lib/libiceoryx_posh*  # [unix]
+        - Library/bin/iceoryx_posh*.dll  # [win]
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - cmake
-        - make
+        - make  # [unix]
+        - ninja  # [win]
       host:
         - libacl    # [linux]
-        - ncurses
+        - ncurses  # [unix]
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
         - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
       run:
@@ -82,21 +90,24 @@ outputs:
         - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/lib/libiceoryx_posh${SHLIB_EXT}
+        - test -f ${PREFIX}/lib/libiceoryx_posh${SHLIB_EXT}  # [unix]
+        - if not exist "%LIBRARY_BIN%\iceoryx_posh.dll" exit 1  # [win]
 
   - name: libiceoryx-binding-c
     files:
       include:
-        - lib/libiceoryx_binding_c*
+        - lib/libiceoryx_binding_c*  # [unix]
+        - Library/bin/iceoryx_binding_c*.dll  # [win]
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - cmake
-        - make
+        - make  # [unix]
+        - ninja  # [win]
       host:
         - libacl    # [linux]
-        - ncurses
+        - ncurses  # [unix]
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
         - {{ pin_subpackage("libiceoryx-posh", exact=True) }}
       run:
@@ -104,7 +115,8 @@ outputs:
         - {{ pin_subpackage("libiceoryx-posh", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/lib/libiceoryx_binding_c${SHLIB_EXT}
+        - test -f ${PREFIX}/lib/libiceoryx_binding_c${SHLIB_EXT}  # [unix]
+        - if not exist "%LIBRARY_BIN%\iceoryx_binding_c.dll" exit 1  # [win]
 
   - name: libiceoryx-platform-devel
     build:
@@ -112,19 +124,28 @@ outputs:
         - {{ pin_subpackage("libiceoryx-platform", max_pin="x.x.x") }}
     files:
       include:
-        - include/iceoryx/v{{ version }}/iceoryx_versions.hpp
-        - include/iceoryx/v{{ version }}/iceoryx_versions.h
-        - include/iceoryx/v{{ version }}/iox
-        - include/iceoryx/v{{ version }}/iceoryx_platform
-        - lib/cmake/iceoryx_platform
+        - include/iceoryx/v{{ version }}/iceoryx_versions.hpp  # [unix]
+        - include/iceoryx/v{{ version }}/iceoryx_versions.h  # [unix]
+        - include/iceoryx/v{{ version }}/iox  # [unix]
+        - include/iceoryx/v{{ version }}/iceoryx_platform  # [unix]
+        - lib/cmake/iceoryx_platform  # [unix]
+        - Library/include/iceoryx/v{{ version }}/iceoryx_versions.hpp  # [win]
+        - Library/include/iceoryx/v{{ version }}/iceoryx_versions.h  # [win]
+        - Library/include/iceoryx/v{{ version }}/iox  # [win]
+        - Library/include/iceoryx/v{{ version }}/iceoryx_platform  # [win]
+        - Library/lib/cmake/iceoryx_platform  # [win]
+        - Library/lib/iceoryx_platform*.lib  # [win]
     requirements:
       run:
         - {{ pin_subpackage("libiceoryx-platform", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.hpp
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.h
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_platform/inet.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.hpp  # [unix]
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_versions.h  # [unix]
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_platform/inet.hpp  # [unix]
+        - if not exist "%LIBRARY_INC%\iceoryx\v{{ version }}\iceoryx_versions.hpp" exit 1  # [win]
+        - if not exist "%LIBRARY_INC%\iceoryx\v{{ version }}\iceoryx_versions.h" exit 1  # [win]
+        - if not exist "%LIBRARY_INC%\iceoryx\v{{ version }}\iceoryx_platform\inet.hpp" exit 1  # [win]
 
   - name: libiceoryx-hoofs-devel
     build:
@@ -132,15 +153,19 @@ outputs:
         - {{ pin_subpackage("libiceoryx-hoofs", max_pin="x.x.x") }}
     files:
       include:
-        - include/iceoryx/v{{ version }}/iceoryx_hoofs
-        - lib/cmake/iceoryx_hoofs
+        - include/iceoryx/v{{ version }}/iceoryx_hoofs  # [unix]
+        - lib/cmake/iceoryx_hoofs  # [unix]
+        - Library/include/iceoryx/v{{ version }}/iceoryx_hoofs  # [win]
+        - Library/lib/cmake/iceoryx_hoofs  # [win]
+        - Library/lib/iceoryx_hoofs*.lib  # [win]
     requirements:
       run:
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
         - {{ pin_subpackage("libiceoryx-platform-devel", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_hoofs/iceoryx_hoofs_types.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_hoofs/iceoryx_hoofs_types.hpp  # [unix]
+        - if not exist "%LIBRARY_INC%\iceoryx\v{{ version }}\iceoryx_hoofs\iceoryx_hoofs_types.hpp" exit 1  # [win]
 
   - name: libiceoryx-posh-devel
     build:
@@ -149,15 +174,19 @@ outputs:
         - {{ pin_subpackage("libiceoryx-hoofs", max_pin="x.x.x") }}
     files:
       include:
-        - include/iceoryx/v{{ version }}/iceoryx_posh
-        - lib/cmake/iceoryx_posh
+        - include/iceoryx/v{{ version }}/iceoryx_posh  # [unix]
+        - lib/cmake/iceoryx_posh  # [unix]
+        - Library/include/iceoryx/v{{ version }}/iceoryx_posh  # [win]
+        - Library/lib/cmake/iceoryx_posh  # [win]
+        - Library/lib/iceoryx_posh*.lib  # [win]
     requirements:
       run:
         - {{ pin_subpackage("libiceoryx-hoofs-devel", exact=True) }}
         - {{ pin_subpackage("libiceoryx-posh", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_posh/version/version_info.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_posh/version/version_info.hpp  # [unix]
+        - if not exist "%LIBRARY_INC%\iceoryx\v{{ version }}\iceoryx_posh\version\version_info.hpp" exit 1  # [win]
 
   - name: libiceoryx-binding-c-devel
     build:
@@ -165,8 +194,11 @@ outputs:
         - {{ pin_subpackage("libiceoryx-binding-c", max_pin="x.x.x") }}
     files:
       include:
-        - include/iceoryx/v{{ version }}/iceoryx_binding_c
-        - lib/cmake/iceoryx_binding
+        - include/iceoryx/v{{ version }}/iceoryx_binding_c  # [unix]
+        - lib/cmake/iceoryx_binding  # [unix]
+        - Library/include/iceoryx/v{{ version }}/iceoryx_binding_c  # [win]
+        - Library/lib/cmake/iceoryx_binding  # [win]
+        - Library/lib/iceoryx_binding_c*.lib  # [win]
     requirements:
       run:
         - {{ pin_subpackage("libiceoryx-hoofs-devel", exact=True) }}
@@ -174,23 +206,28 @@ outputs:
         - {{ pin_subpackage("libiceoryx-binding-c", exact=True) }}
     test:
       commands:
-        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_posh/version/version_info.hpp
+        - test -f ${PREFIX}/include/iceoryx/v{{ version }}/iceoryx_posh/version/version_info.hpp  # [unix]
+        - if not exist "%LIBRARY_INC%\iceoryx\v{{ version }}\iceoryx_posh\version\version_info.hpp" exit 1  # [win]
 
   - name: iceoryx
     files:
       include:
-        - share/doc
-        - bin/iox-roudi
-        - etc/roudi_config_example.toml
+        - share/doc  # [unix]
+        - bin/iox-roudi  # [unix]
+        - etc/roudi_config_example.toml  # [unix]
+        - Library/share/doc  # [win]
+        - Library/bin/iox-roudi.exe  # [win]
+        - Library/etc/roudi_config_example.toml  # [win]
     requirements:
       build:
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - cmake
-        - make
+        - make  # [unix]
+        - ninja  # [win]
       host:
         - libacl     # [linux]
-        - ncurses
+        - ncurses  # [unix]
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
         - {{ pin_subpackage("libiceoryx-posh", exact=True) }}
         - {{ pin_subpackage("libiceoryx-binding-c", exact=True) }}
