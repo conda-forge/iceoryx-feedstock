@@ -246,7 +246,9 @@ outputs:
         - {{ pin_subpackage("libiceoryx-binding-c-devel", exact=True) }}
     test:
       commands:
-        - iox-roudi -h
+        # Command line arguments not accepted on Windows
+        # see https://github.com/eclipse-iceoryx/iceoryx/issues/1795
+        - iox-roudi -h  # [not win]
 
 about:
   home: https://iceoryx.io/
