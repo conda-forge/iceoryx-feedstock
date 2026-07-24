@@ -111,9 +111,11 @@ outputs:
         - ncurses  # [unix]
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
         - {{ pin_subpackage("libiceoryx-posh", exact=True) }}
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}  # [win]
       run:
         - {{ pin_subpackage("libiceoryx-hoofs", exact=True) }}
         - {{ pin_subpackage("libiceoryx-posh", exact=True) }}
+        - {{ pin_subpackage("libiceoryx-platform", exact=True) }}  # [win]
     test:
       commands:
         - test -f ${PREFIX}/lib/libiceoryx_binding_c${SHLIB_EXT}  # [unix]
