@@ -1,0 +1,45 @@
+diff --git a/iceoryx_platform/CMakeLists.txt b/iceoryx_platform/CMakeLists.txt
+index f1dfaac..39e0b2e 100644
+--- a/iceoryx_platform/CMakeLists.txt
++++ b/iceoryx_platform/CMakeLists.txt
+@@ -107,6 +107,13 @@ iox_add_library(
+     FILES                       ${ICEORYX_PLATFORM_FILES}
+ )
+ 
++if(WIN32 AND BUILD_SHARED_LIBS)
++    target_compile_definitions(iceoryx_platform
++        PRIVATE IOX_PLATFORM_BUILDING_DLL
++        INTERFACE IOX_PLATFORM_USING_DLL
++    )
++endif()
++
+ configure_file("${ICEORYX_PLATFORM}/cmake/platform_settings.hpp.in"
+   "${CMAKE_BINARY_DIR}/generated/iceoryx_platform/include/iceoryx_platform/platform_settings.hpp" @ONLY)
+ 
+diff --git a/iceoryx_platform/win/include/iceoryx_platform/getopt.hpp b/iceoryx_platform/win/include/iceoryx_platform/getopt.hpp
+index 2b6f563..610f187 100644
+--- a/iceoryx_platform/win/include/iceoryx_platform/getopt.hpp
++++ b/iceoryx_platform/win/include/iceoryx_platform/getopt.hpp
+@@ -21,9 +21,19 @@
+ 
+ #define optarg "fuu"
+ 
+-extern int optind;
+-extern int opterr;
+-extern int optout;
++#if defined(IOX_PLATFORM_BUILDING_DLL)
++#define IOX_PLATFORM_DATA __declspec(dllexport)
++#elif defined(IOX_PLATFORM_USING_DLL)
++#define IOX_PLATFORM_DATA __declspec(dllimport)
++#else
++#define IOX_PLATFORM_DATA
++#endif
++
++extern IOX_PLATFORM_DATA int optind;
++extern IOX_PLATFORM_DATA int opterr;
++extern IOX_PLATFORM_DATA int optout;
++
++#undef IOX_PLATFORM_DATA
+ 
+ struct option
+ {

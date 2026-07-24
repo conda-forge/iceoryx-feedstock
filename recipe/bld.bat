@@ -6,6 +6,7 @@ cmake -S iceoryx_meta -B build ^
   %CMAKE_ARGS% ^
   -G Ninja ^
   -DBUILD_SHARED_LIBS=ON ^
+  -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON ^
   -DBUILD_TEST=OFF
 if errorlevel 1 exit 1
 
